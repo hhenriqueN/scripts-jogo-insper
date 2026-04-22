@@ -1,23 +1,32 @@
 using UnityEngine;
+using TMPro; // Adiciona isto para funcionar com o seu TempoText
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-
     public GameObject endGamePanel;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public TextMeshProUGUI timerText;      // Mudamos de Text para TextMeshProUGUI
+    public TextMeshProUGUI finalTimeText;  // Mudamos de Text para TextMeshProUGUI
+
+    void Update()
+{
+    // Verificamos se o timerText FOI arrastado para o slot antes de usar
+    if (timerText == null) return; 
+
+    if (GameManager.isPlaying && !GameManager.gameOver)
     {
-        
+        GameManager.timer += Time.deltaTime;
+        timerText.text = "Tempo: " + GameManager.timer.ToString("F2");
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    if (GameManager.gameOver)
     {
-
-        if(GameManager.gameOver)
-        {
-            endGamePanel.SetActive(true);
-        }
+        // Verificamos o painel e o texto final antes de usar
+        if(endGamePanel != null) endGamePanel.SetActive(true);
         
+        if(finalTimeText != null) 
+            finalTimeText.text = "Tempo Final: " + GameManager.timer.ToString("F2") + "s";
+            
+        GameManager.isPlaying = false;
     }
+}
 }
